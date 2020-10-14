@@ -1,0 +1,26 @@
+{
+  "ApplicationName": "InfluxInDb Pusher",
+  "mqttbroker" : {
+    "BrokerIP":"ssl://192.168.178.205:8883",
+    "BrokerPort": 8883,
+    "MqttID":"InfluxinDBPusher",
+    "authentication": false,
+    "Username": "",
+    "Password": "",
+    "clientsideAuth": true,
+    "PublicCerts": "/home/df/Documents/ca.crt",
+    "PrivateCerts": ""
+  },
+  "httpServer" : {
+    "port": 8080,
+    "url": "127.0.0.1",
+    "path" : "/topics"
+  },
+  "influxDB" : {
+    "Username": "root",
+    "password": "root",
+    "port": 8886,
+    "url" : "127.0.0.1",
+    "cert" : "/path"
+  }
+}
