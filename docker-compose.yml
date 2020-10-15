@@ -1,0 +1,41 @@
+version: '3'
+
+
+services:
+  influxdb:
+    image: influxdb:latest
+    container_name: influxdb
+    volumes:
+    - /data/influxdb:/var/lib/influxdb
+    ports:
+    - 8086:8086
+
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+    - 3000:3000
+
+  emqx:
+    image: emqx/emqx:latest
+    container_name: emqx
+    ports:
+      - 18083:18083
+      - 1883:1883
+      - 4369:4369
+
+  influxdb_mqtt_bridge:
+    build:
+      context: .
+    container_name: influxdb_bridge
+    ports:
+      - 8000:8000
+    depends_on:
+      - influxdb
+      - grafana
+      - emqx
+
+  # missing:
+  # web application
+  # Linuxmonitoring Container
