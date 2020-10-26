@@ -5,7 +5,10 @@ from app import create_app
 from decouple import config
 from config import config_dict
 from mqttfluxdbpush import mqttInfluxDBBridge
+import logging
 
+
+logger = logging.getLogger("mqttInfluxDBPusher")
 # WARNING: Don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True)
 # The configuration
@@ -20,14 +23,20 @@ except KeyError:
     exit('Error: Invalid <config_mode>. Expected values [Debug, Production] ')
 
 
-
-x =  mqttInfluxDBBridge()
-x.connectToDataBase("localhost", 8086, "root", "root", "example4")
-x.connectToMqttBroker("192.168.178.205", 8883, "/home/df/Documents/ca.crt")
+x = mqttInfluxDBBridge()
+x.connectToDataBase("localhost", 8086, "root", "root", "example1")
+x.connectToMqttBroker("localhost", 1883, "")
 x.start()
+x.add_mqtt_topic("/test")
 
-app = create_app(app_config, x)
-Migrate(app)
+logger.info("get all topics:" + str(x.get_all_subscribed_Topics()))
+
+app = create_app(app_config)
+app.config['MQTTINFLUXDBBRIDGE_ALLTOPICS'] = x.get_all_subscribed_Topics
+app.config['MQTTINFLUXDBBRIDGE_ADDTOPIC'] = x.add_mqtt_topic
+app.config['MQTTINFLUXDBBRIDGE_REMOVETOPIC'] = x.remove_subscribed
+
+
 
 if __name__ == "__main__":
     app.run()

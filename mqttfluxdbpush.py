@@ -1,19 +1,15 @@
 import json
-from influxdb import InfluxDBClient
-import paho.mqtt.client as mqtt
-import ssl
 import logging
 import threading
 import time
-import argparse
-import socket
 
-from influxdb.exceptions import InfluxDBClientError
+from influxdb_client import InfluxDBConnector
+from mqtt_client import MqttClient
 
 logger = logging.getLogger("mqttInfluxDBPusher")
 logger.setLevel(logging.DEBUG)
 fh = logging.FileHandler("log.out")
-fh.setLevel(logging.INFO)
+fh.setLevel(logging.DEBUG)
 ch = logging.StreamHandler()
 ch.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -23,88 +19,70 @@ logger.addHandler(fh)
 logger.addHandler(ch)
 
 
+class mqttListener:
+    def __init__(self, topic, influxInst, measurementName, hostName):
+        self.topic = topic
+        self.influxInst = influxInst
+        self.measurementName = measurementName
+        self.hostName = hostName
+
+    def mqtt_message_to_InfluxDB(self, payload):
+        logger.debug("receive message in mqtt_message_to_influxDb")
+        try:
+            json_data = json.loads(str(payload))
+            self.influxInst.write_jsondata_in_database(json_data,
+                                                       self.measurementName,
+                                                       self.hostName)
+        except ValueError as e:
+            logger.warning("ValueError " + str(self.topic))
+
+    def __del__(self):
+        logger.info("listener for topic" + self.topic + "killed")
+
+
 class mqttInfluxDBBridge(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
-        self.mqtt_client = mqtt.Client()
-        self.influxdbClient = None
+        self.mqtt_client = None
+        self.influxdbClient = InfluxDBConnector()
         self.topicToSubscribe = []
-        self.cntr = 0
-        self.valueErrorCnt = 0
-        self.dbSavingErrorCnt = 0
-        self.disconnectFlag = False
         logger.info("create mqtt - InfluxDB - Bridge")
-
-    def addTopic(self, topicToSubscrive):
-        self.topicToSubscribe.append(topicToSubscrive)
-        if(self.disconnectFlag == False):
-            self.mqtt_client.subscribe(str(topicToSubscrive))
-            logger.info("subscrribe to " + topicToSubscrive)
-
-    def removeTopic(self,topicToRemove):
-        self.mqtt_client.unsubscribe(topicToRemove)
-        # remove topic from the list.
-
-    def getAllSubscribedTopics(self):
-        return self.topicToSubscribe
+        self.mqttListenerDict = {}
 
     def run(self):
-        while self.valueErrorCnt < 10 and self.dbSavingErrorCnt < 10:
-            self.mqtt_client.loop_forever()
+        while True:
+            self.mqtt_client.mqtt_run()
 
     def connectToDataBase(self, ip, port, userName, password, dataBase):
-        try:
-            self.influxdbClient = InfluxDBClient(ip, port, userName, password, dataBase)
-            self.influxdbClient.create_database(dataBase)
-        except InfluxDBClientError as e:
-            logger.error("unable to connect to influxdb database" + e)
+        self.influxdbClient.connect_to_database(ip=ip,
+                                                port=port,
+                                                userName=userName,
+                                                password=password,
+                                                dataBase=dataBase)
 
     def connectToMqttBroker(self, ip, port, certspath):
-        self.mqtt_client = mqtt.Client("mqttInfluxDBPusher3")
-        self.mqtt_client.on_connect = self.onMqttConnection
-        self.mqtt_client.on_message = self.onMqttMessage
-        self.mqtt_client.on_disconnect = self.onMqttDisconnection
+        self.mqtt_client = MqttClient(ip, port)
+        if certspath:
+            self.mqtt_client.set_secure_connection(certspath)
 
-        try:
-            self.mqtt_client.tls_set(ca_certs=certspath, certfile=None, keyfile=None, cert_reqs=ssl.CERT_REQUIRED,
-                                     tls_version=ssl.PROTOCOL_TLSv1_2, ciphers=None)
-            self.mqtt_client.tls_insecure_set(True)
-            self.mqtt_client.connect(ip, port, 10)
-        except ssl.SSLError as e:
-            logging.warning("uneable to connect to Broker " + str(ip))
+        self.mqtt_client.connect_to_broker()
 
-    def onMqttDisconnection(self, client, userdata, rc):
-        print("on disconnection!")
-        self.disconnectFlag = True
+    def add_mqtt_topic(self, topic):
+        listenerObj = mqttListener(topic=topic,
+                                   influxInst=self.influxdbClient,
+                                   measurementName=str(topic).replace("/", "_", 2),
+                                   hostName="OrangeP")
+        self.mqttListenerDict[topic] = listenerObj
+        self.mqtt_client.add_listener(topic=topic, listener=listenerObj.mqtt_message_to_InfluxDB)
 
-    def onMqttConnection(self, client, userdata, flags, rc):
-        logger.info("Connected successfully to MQttBroker, try to subscribe to " + str(self.topicToSubscribe))
-        for elem in self.topicToSubscribe:
-            self.mqtt_client.subscribe(str(elem))
-            logger.info("subscrribe to " + elem)
+    def get_all_subscribed_Topics(self):
+        return self.mqttListenerDict.keys()
 
-    def subscribe(self, topic):
-        self.mqtt_client.subscribe(topic)
-
-    def onMqttMessage(self, client, userdata, msg):
-        self.cntr += 1
-
-        logger.debug(msg.topic + " \n " + str(msg.payload.decode()))
-        try:
-            json_data = json.loads(str(msg.payload.decode()))
-            self.writeDataInDataBase(json_data, str(msg.topic).replace("/", "_", 2), "OrangePi")
-        except ValueError as e:
-            self.valueErrorCnt += 1
-            logger.warning("ValueError" + e + "errocrnt " + str(self.valueErrorCnt))
-
-    def writeDataInDataBase(self, jsonData, measurementName, hostName):
-        jsonToSave = [{"measurement": measurementName, "tags": {
-            "host": hostName,
-            "valuetype": measurementName
-        }, "fields": jsonData}]
-        if self.influxdbClient.write_points(jsonToSave, time_precision="s") == False:
-            logger.warning("Saving Json Value in InfluxDB went wrong!")
-            self.dbSavingErrorCnt += 1
+    def remove_subscribed(self, topic):
+        if topic in self.mqttListenerDict:
+            self.mqtt_client.unsubscribe_topic(topic)
+            # del self.mqttListenerDict[topic]
+            self.mqttListenerDict.pop(topic)
 
 
 if __name__ == '__main__':
@@ -115,13 +93,13 @@ if __name__ == '__main__':
 
     # print(args.jsonpath)
 
-    list = ["/Orangepi/logging", "/Orangepi/BME680Values", "/Orangepi/system"]
-
-    x = mqttInfluxDBBridge(list)
-    x.connectToDataBase("localhost", 8086, "root", "root", "example4")
-    x.connectToMqttBroker("192.168.178.205", 8883, "/home/df/Documents/ca.crt")
+    x = mqttInfluxDBBridge()
+    x.connectToDataBase("localhost", 8086, "root", "root", "example1")
+    x.connectToMqttBroker("localhost", 1883, "")
     x.start()
+    x.add_mqtt_topic("/test")
+    logger.info("get all topics:" + str(x.get_all_subscribed_Topics()))
 
     while True:
         logger.info("poll restinterface for possible new topics...")
-        time.sleep(5)
+        time.sleep(20)

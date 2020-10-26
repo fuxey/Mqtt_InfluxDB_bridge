@@ -1,16 +1,17 @@
 import random
-from datetime import time
-
+import time
 import paho.mqtt.client as mqtt
 import ssl
 import logging
 import threading
+import json
 
 logging.basicConfig(level=logging.DEBUG)
 
 
 class mqttClient(threading.Thread):
     def __init__(self):
+        threading.Thread.__init__(self)
         self.logger = logging.getLogger(__name__)
         self.mqttc = mqtt.Client()
         self.mqttc.enable_logger(self.logger)
@@ -24,7 +25,8 @@ class mqttClient(threading.Thread):
         self.mqttc.subscribe("$SYS/#", 0)
 
     def publish(self, topic, message):
-        self.mqttc.publish(topic, payload=time)
+        logging.debug("publish: " + str(topic) + "payload: " + str(message))
+        self.mqttc.publish(topic=topic, payload=message)
 
     def run(self):
         self.mqttc.loop_forever()
@@ -36,11 +38,11 @@ class mqttClient(threading.Thread):
 if __name__ == '__main__':
 
     x = mqttClient()
-    x.connect("mqtt.eclipse.org", 1883)
-    x.subscribe()
-    x.run()
+    x.connect("localhost", 1883)
+    #x.subscribe()
+    x.start()
 
     while True:
         time.sleep(1)
         num2 = random.randint(12, 32)
-        x.publish("/topic", str(num2))
+        x.publish("/test", '{ "temperature":'+str(num2)+' }')

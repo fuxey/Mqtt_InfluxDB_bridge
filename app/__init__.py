@@ -7,9 +7,8 @@ def register_blueprints(app):
     app.register_blueprint(module.blueprint)
 
 
-def create_app(config, mqttInfluxDBBridge):
+def create_app(config):
     app = Flask(__name__, static_folder='base/static')
-    app.config['MQTTINFLUXDBBRIDGE'] = mqttInfluxDBBridge
     app.config.from_object(config)
     register_blueprints(app)
     return app
