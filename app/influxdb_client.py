@@ -36,4 +36,8 @@ class InfluxDBConnector:
         self.influxdbClient.create_database(databaseName)
 
 
+    def list_databases(self):
+        return self.influxdbClient.get_list_database()
+
+
 

@@ -8,7 +8,7 @@ from mqtt_client import MqttClient
 
 logger = logging.getLogger("mqttInfluxDBPusher")
 logger.setLevel(logging.DEBUG)
-fh = logging.FileHandler("log.out")
+fh = logging.FileHandler("../log.out")
 fh.setLevel(logging.DEBUG)
 ch = logging.StreamHandler()
 ch.setLevel(logging.DEBUG)
@@ -83,6 +83,12 @@ class mqttInfluxDBBridge(threading.Thread):
             self.mqtt_client.unsubscribe_topic(topic)
             # del self.mqttListenerDict[topic]
             self.mqttListenerDict.pop(topic)
+
+    def create_database(self, name):
+        self.influxdbClient.create_database(name)
+
+    def list_database(self):
+        return self.influxdbClient.list_databases()
 
 
 if __name__ == '__main__':

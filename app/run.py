@@ -1,7 +1,5 @@
-from flask_migrate import Migrate
-from os import environ
 from sys import exit
-from app import create_app
+from restapi import create_app
 from decouple import config
 from config import config_dict
 from mqttfluxdbpush import mqttInfluxDBBridge
@@ -35,8 +33,11 @@ app = create_app(app_config)
 app.config['MQTTINFLUXDBBRIDGE_ALLTOPICS'] = x.get_all_subscribed_Topics
 app.config['MQTTINFLUXDBBRIDGE_ADDTOPIC'] = x.add_mqtt_topic
 app.config['MQTTINFLUXDBBRIDGE_REMOVETOPIC'] = x.remove_subscribed
+app.config['MQTTINFLUXDBBRIDGE_CREATE_DATABASE'] = x.create_database
+app.config['MQTTINFLUXDBBRIDGE_LIST_DATABASE'] = x.list_database
 
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host='0.0.0.0', port=8000)
+

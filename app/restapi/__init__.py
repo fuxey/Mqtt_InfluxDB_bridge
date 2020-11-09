@@ -3,7 +3,7 @@ from importlib import import_module
 
 
 def register_blueprints(app):
-    module = import_module(str('app.base.routes'))
+    module = import_module(str('app.restapi.base.routes'))
     app.register_blueprint(module.blueprint)
 
 

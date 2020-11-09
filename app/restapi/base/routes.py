@@ -1,5 +1,5 @@
-from flask import jsonify, render_template, redirect, request, url_for
-from app.base import blueprint
+from flask import redirect, request, url_for
+from restapi.base import blueprint
 from flask import current_app
 import logging
 
@@ -31,3 +31,16 @@ def remove_topic():
     logger.debug("remove topic: " + str(topic_to_unsubscribe))
     current_app.config['MQTTINFLUXDBBRIDGE_REMOVETOPIC'](topic_to_unsubscribe)
     return redirect(url_for('base_blueprint.state'))
+
+@blueprint.route('/create_database', methods=['POST'])
+def create_database():
+    database_to_create_name = str(request.args.get('name'))
+    logger.debug("create database with name: "+ database_to_create_name)
+    current_app.config['MQTTINFLUXDBBRIDGE_CREATE_DATABASE'](database_to_create_name)
+    return redirect(url_for('base_blueprint.state'))
+
+
+@blueprint.route('/list_database', methods=['GET'])
+def list_databases():
+    allDatabase = current_app.config['MQTTINFLUXDBBRIDGE_LIST_DATABASE']()
+    return str(allDatabase)
