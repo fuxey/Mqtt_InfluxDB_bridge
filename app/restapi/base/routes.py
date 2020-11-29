@@ -4,7 +4,11 @@ from flask import current_app
 import logging
 
 logger = logging.getLogger("mqttInfluxDBPusher")
+logger.info("register routes!")
 
+@blueprint.route('/health', methods=['GET'])
+def health_route():
+    return str('health')
 
 @blueprint.route('/', methods=['GET'])
 def route_default():
@@ -32,10 +36,11 @@ def remove_topic():
     current_app.config['MQTTINFLUXDBBRIDGE_REMOVETOPIC'](topic_to_unsubscribe)
     return redirect(url_for('base_blueprint.state'))
 
+
 @blueprint.route('/create_database', methods=['POST'])
 def create_database():
     database_to_create_name = str(request.args.get('name'))
-    logger.debug("create database with name: "+ database_to_create_name)
+    logger.debug("create database with name: " + database_to_create_name)
     current_app.config['MQTTINFLUXDBBRIDGE_CREATE_DATABASE'](database_to_create_name)
     return redirect(url_for('base_blueprint.state'))
 

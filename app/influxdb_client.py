@@ -10,6 +10,7 @@ logger = logging.getLogger("mqttInfluxDBPusher")
 
 class InfluxDBConnector:
     def __init__(self):
+        logger.info("create influxdb connector")
         self.dbSavingErrorCnt = 0
 
     def connect_to_database(self,ip, port, userName, password, dataBase):
