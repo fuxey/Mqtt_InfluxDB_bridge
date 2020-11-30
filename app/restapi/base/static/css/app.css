@@ -1,0 +1,18 @@
+.text-center {
+  text-align: center;
+}
+
+.drawer-option {
+  padding: 16px;
+}
+
+.enable-notifications {
+  display: none;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+
+  align-items: center;
+}

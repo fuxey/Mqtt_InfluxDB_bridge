@@ -1,7 +1,8 @@
 from flask import redirect, request, url_for
 from restapi.base import blueprint
-from flask import current_app
+from flask import current_app, render_template, jsonify
 import logging
+import json
 
 logger = logging.getLogger("mqttInfluxDBPusher")
 logger.info("register routes!")
@@ -12,21 +13,32 @@ def health_route():
 
 @blueprint.route('/', methods=['GET'])
 def route_default():
-    return redirect(url_for('base_blueprint.state'))
+    return render_template('index.html')
+
+@blueprint.route('/help', methods=['GET'])
+def help_route():
+    return render_template('help.html')
+
 
 
 @blueprint.route('/state', methods=['GET'])
 def state():
     mqttInfluxDbBridge = current_app.config['MQTTINFLUXDBBRIDGE_ALLTOPICS']()
-    return str(mqttInfluxDbBridge)
+    logger.debug(mqttInfluxDbBridge)
+    default = {"topics": []}
+    for key in mqttInfluxDbBridge:
+        default["topics"].append(key)
 
+    return json.dumps(default)
 
 @blueprint.route('/addSubscription', methods=['POST'])
 def add_subscription():
-    topic_to_subscribe = str(request.args.get('topic'))
-    logger.debug("receive topic: " + str(topic_to_subscribe))
+    data = json.loads(request.stream.read())
+    logger.debug(data["topic"])
+    topic_to_subscribe = data["topic"]
+    logger.debug("receive topic: " + topic_to_subscribe)
     current_app.config['MQTTINFLUXDBBRIDGE_ADDTOPIC'](topic_to_subscribe)
-    return redirect(url_for('base_blueprint.state'))
+    return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
 
 @blueprint.route('/removeTopic', methods=['DELETE'])

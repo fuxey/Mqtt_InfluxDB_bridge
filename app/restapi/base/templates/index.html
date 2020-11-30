@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+      <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>InfluxDB Mqtt Pusher!</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.3.0/material.indigo-pink.min.css">
+    <meta name="theme-color" content="#3f51b5">
+    <link rel="stylesheet" href="/static/css/app.css">
+    <link rel="stylesheet" href="/static/css/feed.css">
+</head>
+
+
+<body>
+<div id="app">
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+        <header class="mdl-layout__header">
+            <div class="mdl-layout__header-row">
+
+                <span class="mdl-layout-title">Influxdb Mqtt Pusher</span>
+                <!-- Add spacer, to align navigation to the right -->
+                <div class="mdl-layout-spacer"></div>
+                <!-- Navigation. We hide it in small screens. -->
+                <nav class="mdl-navigation mdl-layout--large-screen-only">
+                    <a class="mdl-navigation__link" href="/">Feed</a>
+                    <a class="mdl-navigation__link" href="/help">Help</a>
+                    <div class="drawer-option">
+                        <button class="enable-notifications mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-color--accent">
+                            Enable Notifications
+                        </button>
+                    </div>
+                </nav>
+            </div>
+        </header>
+        <div class="mdl-layout__drawer">
+            <span class="mdl-layout-title">InfluxdbPusher</span>
+            <nav class="mdl-navigation">
+                <a class="mdl-navigation__link" href="/">Feed</a>
+                <a class="mdl-navigation__link" href="/help">Help</a>
+            </nav>
+        </div>
+
+
+<main class="mdl-layout__content mat-typography">
+        <ul class='mdl-list' id="topic-list">
+
+        </ul>
+       <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
+                type="submit" id="showtopics-btn">Reload List!
+       </button>
+ </main>
+
+        <main class="mdl-layout__content mat-typography">
+
+                <div class="input-section mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                     id="subscribe_to_topic">
+                    <input class="mdl-textfield__input" type="text" id="topic">
+                    <label class="mdl-textfield__label" for="topic" name="topic">Subscribe to Topic</label>
+                </div>
+                <div>
+                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
+                            type="submit" id="subscribe-btn">Subscribe!
+                    </button>
+                </div>
+
+
+        </main>
+        <div id="confirmation-toast" aria-live="assertive" aria-atomic="true" aria-relevant="text"
+             class="mdl-snackbar mdl-js-snackbar">
+            <div class="mdl-snackbar__text"></div>
+            <button type="button" class="mdl-snackbar__action"></button>
+        </div>
+
+    </div>
+</div>
+<script defer src="/static/js/material.min.js"></script>
+<script src="/static/js/app.js"></script>
+</body>
+</html>

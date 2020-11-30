@@ -44,7 +44,7 @@ def buildApp(brokerAdr,
              influxdbPassword):
     x = mqttInfluxDBBridge()
 
-    time.sleep(15)
+    time.sleep(1)
 
     x.connectToDataBase(influxdbAdr, int(influxdbPort), influxdbUserName, influxdbPassword, "example1")
     x.connectToMqttBroker(brokerAdr, int(brokerPort), "")
@@ -55,7 +55,8 @@ def buildApp(brokerAdr,
 
     app = create_app()
     app.config['SECRET_KEY'] = 'S#perS3crEt_007'
-    app.config['PRODUCTION'] = True
+    app.config['PRODUCTION'] = False
+    app.config['DEBUG'] = True
     app.config['SESSION_COOKIE_HTTPONLY'] = True
     app.config['REMEMBER_COOKIE_HTTPONLY'] = True
     app.config['REMEMBER_COOKIE_DURATION'] = 3600
