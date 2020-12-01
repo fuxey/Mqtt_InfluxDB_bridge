@@ -43,10 +43,12 @@ def add_subscription():
 
 @blueprint.route('/removeTopic', methods=['DELETE'])
 def remove_topic():
-    topic_to_unsubscribe = str(request.args.get('topic'))
-    logger.debug("remove topic: " + str(topic_to_unsubscribe))
+    data = json.loads(request.stream.read())
+    logger.debug(data["topic"])
+    topic_to_unsubscribe = data["topic"]
+    logger.debug("remove topic: " + topic_to_unsubscribe)
     current_app.config['MQTTINFLUXDBBRIDGE_REMOVETOPIC'](topic_to_unsubscribe)
-    return redirect(url_for('base_blueprint.state'))
+    return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
 
 @blueprint.route('/create_database', methods=['POST'])

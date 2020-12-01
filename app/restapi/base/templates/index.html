@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="en">
 <head>
-      <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>InfluxDB Mqtt Pusher!</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -46,30 +46,61 @@
         </div>
 
 
-<main class="mdl-layout__content mat-typography">
-        <ul class='mdl-list' id="topic-list">
+        <div class="mdl-grid">
+            <div class="mdl-card">
+                <div class="mdl-cell mdl-cell--8-col">
 
-        </ul>
-       <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
-                type="submit" id="showtopics-btn">Reload List!
-       </button>
- </main>
+                    <main class="mdl-layout__content mat-typography">
+                        <ul class='mdl-list' id="topic-list">
 
-        <main class="mdl-layout__content mat-typography">
-
-                <div class="input-section mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
-                     id="subscribe_to_topic">
-                    <input class="mdl-textfield__input" type="text" id="topic">
-                    <label class="mdl-textfield__label" for="topic" name="topic">Subscribe to Topic</label>
-                </div>
-                <div>
-                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
-                            type="submit" id="subscribe-btn">Subscribe!
-                    </button>
+                        </ul>
+                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
+                                type="submit" id="showtopics-btn">Reload List!
+                        </button>
+                    </main>
                 </div>
 
+            </div>
+            <div class="mdl-card">
+                <div class="mdl-cell mdl-cell--2-col">
+                    <main class="mdl-layout__content mat-typography">
 
-        </main>
+                        <div class="input-section mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                             id="subscribe_to_topic">
+                            <input class="mdl-textfield__input" type="text" id="topic">
+                            <label class="mdl-textfield__label" for="topic" name="topic">Subscribe to Topic</label>
+                        </div>
+                        <div>
+                            <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
+                                    type="submit" id="subscribe-btn">Subscribe!
+                            </button>
+                        </div>
+
+
+                    </main>
+                </div>
+            </div>
+
+            <div class="mdl-card">
+                <div class="mdl-cell mdl-cell--2-col">
+                    <main class="mdl-layout__content mat-typography">
+
+                        <div class="input-section mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                             id="unsubscribe_to_topic">
+                            <input class="mdl-textfield__input" type="text" id="untopic">
+                            <label class="mdl-textfield__label" for="untopic" name="topic" id="untopic-lbl">UN-Subscribe from Topic</label>
+                        </div>
+                        <div>
+                            <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
+                                    type="submit" id="unsubscribe-btn">UN-Subscribe!
+                            </button>
+                        </div>
+
+
+                    </main>
+                </div>
+            </div>
+        </div>
         <div id="confirmation-toast" aria-live="assertive" aria-atomic="true" aria-relevant="text"
              class="mdl-snackbar mdl-js-snackbar">
             <div class="mdl-snackbar__text"></div>
