@@ -80,6 +80,9 @@ class mqttInfluxDBBridge(threading.Thread):
     def list_database(self):
         return self.influxdbClient.list_databases()
 
+    def get_received_message_counter(self):
+        return self.mqtt_client.get_received_messages_counter()
+
 
 if __name__ == '__main__':
 

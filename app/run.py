@@ -67,6 +67,7 @@ def buildApp(brokerAdr,
     app.config[MQTTINFLUXDBBRIDGE_REMOVETOPIC] = mqtt_influxdb_bridge_obj.remove_subscribed
     app.config[MQTTINFLUXDBBRIDGE_CREATE_DATABASE] = mqtt_influxdb_bridge_obj.create_database
     app.config[MQTTINFLUXDBBRIDGE_LIST_DATABASE] = mqtt_influxdb_bridge_obj.list_database
+    app.config[MQTTINFLUXDBBRIDGE_GET_RECEIVED_MESSAGE_COUNTER] = mqtt_influxdb_bridge_obj.get_received_message_counter
 
     return app
 

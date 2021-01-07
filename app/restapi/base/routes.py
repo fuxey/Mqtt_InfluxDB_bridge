@@ -27,8 +27,10 @@ def help_route():
 @blueprint.route('/state', methods=['GET'])
 def state():
     mqttInfluxDbBridge = current_app.config[MQTTINFLUXDBBRIDGE_ALLTOPICS]()
+    received_messages_counter = current_app.config[MQTTINFLUXDBBRIDGE_GET_RECEIVED_MESSAGE_COUNTER]()
     logger.debug(mqttInfluxDbBridge)
-    default = {"topics": []}
+    default = {"topics": [],
+               "receivedMessages": received_messages_counter}
     for key in mqttInfluxDbBridge:
         default["topics"].append(key)
 

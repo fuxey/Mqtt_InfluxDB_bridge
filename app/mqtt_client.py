@@ -17,6 +17,9 @@ class MqttClient:
         self.disconnectCounter = 0
         self.listenerDisct = {}
 
+    def get_received_messages_counter(self):
+        return self.receivedMessageCounter
+
     def set_secure_connection(self, ca_cert):
         self.mqtt_client.tls_set(ca_certs=ca_cert, certfile=None, keyfile=None, tls_version=ssl.PROTOCOL_TLSv1_2,
                                  ciphers=None, cert_reqs=ssl.CERT_REQUIRED)

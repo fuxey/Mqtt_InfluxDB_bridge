@@ -9,6 +9,11 @@ const subscribeDataBaseName = document.querySelector('#dbName');
 const snackbarContainer = document.querySelector('#confirmation-toast');
 const showTopicsbtn = document.querySelector('#showtopics-btn');
 const topicList = document.querySelector('#topic-list');
+const activeTopicsInput = document.querySelector('#activeTopics');
+const totalReceivedMessageInput = document.querySelector('#totalreceivedMessages');
+
+
+
 
 const unsubscribeBtn = document.querySelector('#unsubscribe-btn');
 const unsubscribeInput = document.querySelector('#untopic');
@@ -119,6 +124,8 @@ const updateList = () => {
                 topicList.appendChild(entry);
             }
         });
+        activeTopicsInput.value = value.topics.count();
+        totalReceivedMessageInput.value = value.receivedMessages;
     });
 };
 
