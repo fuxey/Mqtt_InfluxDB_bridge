@@ -14,7 +14,6 @@ const totalReceivedMessageInput = document.querySelector('#totalreceivedMessages
 
 
 
-
 const unsubscribeBtn = document.querySelector('#unsubscribe-btn');
 const unsubscribeInput = document.querySelector('#untopic');
 const unsubscribeLabel = document.querySelector('#untopic-lbl');
@@ -25,7 +24,7 @@ const createDataBaseInput = document.querySelector('#createdatabase');
 
 
 
-createDatabaseBtn.addEvenetListener('click', (evt) => {
+createDatabaseBtn.addEventListener('click', (evt) => {
     const postData = {"databaseName": createDataBaseInput.value};
     fetch('/create_database', {
         method: 'POST',
@@ -80,8 +79,8 @@ unsubscribeBtn.addEventListener('click', (evt) => {
 
 
 subscribeBtn.addEventListener('click', (_event) => {
-    console.log("button subscribe pressed!, push data", subscribeInput.value);
-    const postData = { "topic": subscribeInput.value,
+    console.log("button subscribe pressed!, push data", subscribeTopic.value);
+    const postData = { "topic": subscribeTopic.value,
         "measurementName": subscribeMeasurementName.value,
         "hostName": subscribeHostName.value,
         "dbName": subscribeDataBaseName.value
@@ -124,8 +123,8 @@ const updateList = () => {
                 topicList.appendChild(entry);
             }
         });
-        activeTopicsInput.value = value.topics.count();
-        totalReceivedMessageInput.value = value.receivedMessages;
+        activeTopicsInput.value = value.topics.length + ' Topics';
+        totalReceivedMessageInput.value = value.receivedMessages + ' received Messages';
     });
 };
 
