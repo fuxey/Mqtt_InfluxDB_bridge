@@ -57,13 +57,13 @@ class mqttInfluxDBBridge(threading.Thread):
 
         self.mqtt_client.connect_to_broker()
 
-    def add_mqtt_topic(self, topic):
-        listenerObj = mqttListener(topic=topic,
-                                   influxInst=self.influxdbClient,
-                                   measurementName=str(topic).replace("/", "_", 2),
-                                   hostName="OrangeP")
-        self.mqttListenerDict[topic] = listenerObj
-        self.mqtt_client.add_listener(topic=topic, listener=listenerObj.mqtt_message_to_InfluxDB)
+    def add_mqtt_topic(self, topic, measurement_name, host_name):
+        listener_obj = mqttListener(topic=topic,
+                                    influxInst=self.influxdbClient,
+                                    measurementName=measurement_name,
+                                    hostName=host_name)
+        self.mqttListenerDict[topic] = listener_obj
+        self.mqtt_client.add_listener(topic=topic, listener=listener_obj.mqtt_message_to_InfluxDB)
 
     def get_all_subscribed_Topics(self):
         return self.mqttListenerDict.keys()
@@ -93,7 +93,7 @@ if __name__ == '__main__':
     x.connectToDataBase("localhost", 8086, "root", "root", "example1")
     x.connectToMqttBroker("localhost", 1883, "")
     x.start()
-    x.add_mqtt_topic("/test")
+    x.add_mqtt_topic("/test", "measurement_name", "tests_name")
     logger.info("get all topics:" + str(x.get_all_subscribed_Topics()))
 
     while True:

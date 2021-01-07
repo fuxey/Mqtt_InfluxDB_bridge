@@ -1,5 +1,11 @@
 const subscribeBtn = document.querySelector('#subscribe-btn');
-const subscribeInput = document.querySelector('#topic')
+const subscribeTopic = document.querySelector('#topic');
+const subscribeMeasurementName = document.querySelector('#measurementName');
+const subscribeHostName = document.querySelector('#hostName');
+const subscribeDataBaseName = document.querySelector('#dbName');
+
+
+
 const snackbarContainer = document.querySelector('#confirmation-toast');
 const showTopicsbtn = document.querySelector('#showtopics-btn');
 const topicList = document.querySelector('#topic-list');
@@ -7,6 +13,36 @@ const topicList = document.querySelector('#topic-list');
 const unsubscribeBtn = document.querySelector('#unsubscribe-btn');
 const unsubscribeInput = document.querySelector('#untopic');
 const unsubscribeLabel = document.querySelector('#untopic-lbl');
+
+const createDatabaseBtn = document.querySelector('#createdatabase-btn');
+const createDataBaseInput = document.querySelector('#createdatabase');
+
+
+
+
+createDatabaseBtn.addEvenetListener('click', (evt) => {
+    const postData = {"databaseName": createDataBaseInput.value};
+    fetch('/create_database', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(postData),
+    }).then(value => {
+        console.log("data send successfully");
+        const data = {message: 'create database, successful'};
+        snackbarContainer.MaterialSnackbar.showSnackbar(data);
+        createDataBaseInput.value = "";
+    }).catch(reason => {
+        const data = {message: 'create Database no successful'};
+        snackbarContainer.MaterialSnackbar.showSnackbar(data);
+    });
+
+
+});
+
+
+
 
 setTimeout(a => {
 
@@ -31,7 +67,7 @@ unsubscribeBtn.addEventListener('click', (evt) => {
         }
         unsubscribeInput.value = "";
     }).catch(reason => {
-        const data = {message: 'subscribe to topic not successfuly'};
+        const data = {message: 'subscribe to topic not successfully'};
         snackbarContainer.MaterialSnackbar.showSnackbar(data);
     });
 });
@@ -40,7 +76,11 @@ unsubscribeBtn.addEventListener('click', (evt) => {
 
 subscribeBtn.addEventListener('click', (_event) => {
     console.log("button subscribe pressed!, push data", subscribeInput.value);
-    const postData = {"topic": subscribeInput.value};
+    const postData = { "topic": subscribeInput.value,
+        "measurementName": subscribeMeasurementName.value,
+        "hostName": subscribeHostName.value,
+        "dbName": subscribeDataBaseName.value
+    };
     fetch('/addSubscription', {
         method: 'POST',
         headers: {

@@ -51,6 +51,17 @@
                 <div class="mdl-cell mdl-cell--8-col">
 
                     <main class="mdl-layout__content mat-typography">
+                          <div class="input-section mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                <input class="mdl-textfield__input" readonly type="number" id="activeTopics">
+                                <label class="mdl-textfield__label" for="activeTopics" name="activeTopics">active Topics
+                                    </label>
+                            </div>
+                          <div class="input-section mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                <input class="mdl-textfield__input" readonly type="number" id="totalreceivedMessages">
+                                <label class="mdl-textfield__label" for="totalreceivedMessages" name="totalreceivedMessages">total received Messages
+                                    </label>
+                            </div>
+
                         <ul class='mdl-list' id="topic-list">
 
                         </ul>
@@ -64,19 +75,30 @@
             <div class="mdl-card">
                 <div class="mdl-cell mdl-cell--2-col">
                     <main class="mdl-layout__content mat-typography">
-
-                        <div class="input-section mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
-                             id="subscribe_to_topic">
-                            <input class="mdl-textfield__input" type="text" id="topic">
-                            <label class="mdl-textfield__label" for="topic" name="topic">Subscribe to Topic</label>
+                        <div id="subsribe_to_topic">
+                            <div class="input-section mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                <input class="mdl-textfield__input" type="text" id="topic">
+                                <label class="mdl-textfield__label" for="topic" name="topic">Subscribe to Topic</label>
+                            </div>
+                            <div class="input-section mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                <input class="mdl-textfield__input" type="text" id="measurementName">
+                                <label class="mdl-textfield__label" for="measurementName" name="measurementName">Measurement
+                                    Name</label>
+                            </div>
+                            <div class="input-section mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                <input class="mdl-textfield__input" type="text" id="hostName">
+                                <label class="mdl-textfield__label" for="hostName" name="hostName">Host Name</label>
+                            </div>
+                            <div class="input-section mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                <input class="mdl-textfield__input" type="text" id="dbName">
+                                <label class="mdl-textfield__label" for="dbName" name="dbName">Database Name</label>
+                            </div>
                         </div>
                         <div>
                             <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
-                                    type="submit" id="subscribe-btn">Subscribe!
+                                    type="submit" id="subscribe-btn">Subscribe
                             </button>
                         </div>
-
-
                     </main>
                 </div>
             </div>
@@ -88,15 +110,28 @@
                         <div class="input-section mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
                              id="unsubscribe_to_topic">
                             <input class="mdl-textfield__input" type="text" id="untopic">
-                            <label class="mdl-textfield__label" for="untopic" name="topic" id="untopic-lbl">UN-Subscribe from Topic</label>
+                            <label class="mdl-textfield__label" for="untopic" name="topic" id="untopic-lbl">UN-Subscribe
+                                from Topic</label>
                         </div>
                         <div>
                             <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
-                                    type="submit" id="unsubscribe-btn">UN-Subscribe!
+                                    type="submit" id="unsubscribe-btn">UN-Subscribe
                             </button>
                         </div>
+                    </main>
+                    <main class="mdl-layout__content mat-typography">
 
-
+                        <div class="input-section mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                             id="_createDatabase">
+                            <input class="mdl-textfield__input" type="text" id="createdatabase">
+                            <label class="mdl-textfield__label" for="createdatabase-btn" name="topic"
+                                   id="createdatabase-lbl">Create Database</label>
+                        </div>
+                        <div>
+                            <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
+                                    type="submit" id="createdatabase-btn">Create Database
+                            </button>
+                        </div>
                     </main>
                 </div>
             </div>

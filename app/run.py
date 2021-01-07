@@ -7,6 +7,7 @@ import logging
 import os
 import time
 import argparse
+from constants import *
 
 logger = logging.getLogger("mqttInfluxDBPusher")
 logger.setLevel(logging.DEBUG)
@@ -42,16 +43,16 @@ def buildApp(brokerAdr,
              influxdbPort,
              influxdbUserName,
              influxdbPassword):
-    x = mqttInfluxDBBridge()
+    mqtt_influxdb_bridge_obj = mqttInfluxDBBridge()
 
     time.sleep(1)
 
-    x.connectToDataBase(influxdbAdr, int(influxdbPort), influxdbUserName, influxdbPassword, "example1")
-    x.connectToMqttBroker(brokerAdr, int(brokerPort), "")
-    x.start()
-    x.add_mqtt_topic("/test")
+    mqtt_influxdb_bridge_obj.connectToDataBase(influxdbAdr, int(influxdbPort), influxdbUserName, influxdbPassword, "example1")
+    mqtt_influxdb_bridge_obj.connectToMqttBroker(brokerAdr, int(brokerPort), "")
+    mqtt_influxdb_bridge_obj.start()
+    mqtt_influxdb_bridge_obj.add_mqtt_topic("/test", "test_measurement_name", "test_host_name")
 
-    logger.info("get all topics:" + str(x.get_all_subscribed_Topics()))
+    logger.info("get all topics:" + str(mqtt_influxdb_bridge_obj.get_all_subscribed_Topics()))
 
     app = create_app()
     app.config['SECRET_KEY'] = 'S#perS3crEt_007'
@@ -61,11 +62,11 @@ def buildApp(brokerAdr,
     app.config['REMEMBER_COOKIE_HTTPONLY'] = True
     app.config['REMEMBER_COOKIE_DURATION'] = 3600
 
-    app.config['MQTTINFLUXDBBRIDGE_ALLTOPICS'] = x.get_all_subscribed_Topics
-    app.config['MQTTINFLUXDBBRIDGE_ADDTOPIC'] = x.add_mqtt_topic
-    app.config['MQTTINFLUXDBBRIDGE_REMOVETOPIC'] = x.remove_subscribed
-    app.config['MQTTINFLUXDBBRIDGE_CREATE_DATABASE'] = x.create_database
-    app.config['MQTTINFLUXDBBRIDGE_LIST_DATABASE'] = x.list_database
+    app.config[MQTTINFLUXDBBRIDGE_ALLTOPICS] = mqtt_influxdb_bridge_obj.get_all_subscribed_Topics
+    app.config[MQTTINFLUXDBBRIDGE_ADDTOPIC] = mqtt_influxdb_bridge_obj.add_mqtt_topic
+    app.config[MQTTINFLUXDBBRIDGE_REMOVETOPIC] = mqtt_influxdb_bridge_obj.remove_subscribed
+    app.config[MQTTINFLUXDBBRIDGE_CREATE_DATABASE] = mqtt_influxdb_bridge_obj.create_database
+    app.config[MQTTINFLUXDBBRIDGE_LIST_DATABASE] = mqtt_influxdb_bridge_obj.list_database
 
     return app
 
