@@ -18,7 +18,7 @@
 
 <body>
 <div id="app">
-    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-tabs">
         <header class="mdl-layout__header">
             <div class="mdl-layout__header-row">
 
@@ -36,6 +36,12 @@
                     </div>
                 </nav>
             </div>
+            <!-- Tabs -->
+            <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
+                <a href="#scroll-tab-1" class="mdl-layout__tab is-active">Connection Info</a>
+                <a href="#scroll-tab-2" class="mdl-layout__tab">Add Connection</a>
+                <a href="#scroll-tab-3" class="mdl-layout__tab">Add Database</a>
+            </div>
         </header>
         <div class="mdl-layout__drawer">
             <span class="mdl-layout-title">InfluxdbPusher</span>
@@ -46,96 +52,100 @@
         </div>
 
 
-        <div class="mdl-grid">
-            <div class="mdl-card">
-                <div class="mdl-cell mdl-cell--8-col">
+        <main class="mdl-layout__content">
+            <div class="center">
+                <!-- List of Subscriptions -->
+                <section class="mdl-layout__tab-panel is-active" id="scroll-tab-1">
+                    <div class="page-content">
 
-                    <main class="mdl-layout__content mat-typography">
-                          <div class="input-section mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <main class="mdl-layout__content mat-typography">
+                            <div class="input-section mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                 <input class="mdl-textfield__input" readonly type="text" id="activeTopics">
                                 <input class="mdl-textfield__input" readonly type="text" id="totalreceivedMessages">
                             </div>
 
-                        <ul class='mdl-list' id="topic-list">
+                            <ul class='mdl-list' id="topic-list">
 
-                        </ul>
-                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
-                                type="submit" id="showtopics-btn">Reload List!
-                        </button>
-                    </main>
-                </div>
-
-            </div>
-            <div class="mdl-card">
-                <div class="mdl-cell mdl-cell--2-col">
-                    <main class="mdl-layout__content mat-typography">
-                        <div id="subsribe_to_topic">
-                            <div class="input-section mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input class="mdl-textfield__input" type="text" id="topic">
-                                <label class="mdl-textfield__label" for="topic" name="topic">Subscribe to Topic</label>
-                            </div>
-                            <div class="input-section mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input class="mdl-textfield__input" type="text" id="measurementName">
-                                <label class="mdl-textfield__label" for="measurementName" name="measurementName">Measurement
-                                    Name</label>
-                            </div>
-                            <div class="input-section mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input class="mdl-textfield__input" type="text" id="hostName">
-                                <label class="mdl-textfield__label" for="hostName" name="hostName">Host Name</label>
-                            </div>
-                            <div class="input-section mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input class="mdl-textfield__input" type="text" id="dbName">
-                                <label class="mdl-textfield__label" for="dbName" name="dbName">Database Name</label>
-                            </div>
-                        </div>
-                        <div>
+                            </ul>
                             <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
-                                    type="submit" id="subscribe-btn">Subscribe
+                                    type="submit" id="showtopics-btn">Reload List!
                             </button>
-                        </div>
-                    </main>
+
+                            <div class="input-section mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                                 id="unsubscribe_to_topic">
+                                <input class="mdl-textfield__input" type="text" id="untopic">
+                                <label class="mdl-textfield__label" for="untopic" name="topic" id="untopic-lbl">UN-Subscribe
+                                    from Topic</label>
+                            </div>
+                            <div>
+                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
+                                        type="submit" id="unsubscribe-btn">UN-Subscribe
+                                </button>
+                            </div>
+                        </main>
+                    </div>
+                </section>
+
+                <!-- Add Subscription -->
+                <section class="mdl-layout__tab-panel" id="scroll-tab-2">
+                    <div class="page-content">
+                        <main class="mdl-layout__content mat-typography">
+                            <div id="subsribe_to_topic">
+                                <div class="input-section mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                    <input class="mdl-textfield__input" type="text" id="topic">
+                                    <label class="mdl-textfield__label" for="topic" name="topic">Subscribe to Topic</label>
+                                </div>
+                                <div class="input-section mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                    <input class="mdl-textfield__input" type="text" id="measurementName">
+                                    <label class="mdl-textfield__label" for="measurementName" name="measurementName">Measurement
+                                        Name</label>
+                                </div>
+                                <div class="input-section mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                    <input class="mdl-textfield__input" type="text" id="hostName">
+                                    <label class="mdl-textfield__label" for="hostName" name="hostName">Host Name</label>
+                                </div>
+                                <div class="input-section mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                    <input class="mdl-textfield__input" type="text" id="dbName">
+                                    <label class="mdl-textfield__label" for="dbName" name="dbName">Database Name</label>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
+                                        type="submit" id="subscribe-btn">Subscribe
+                                </button>
+                            </div>
+                        </main>
+                    </div>
+                </section>
+
+                <!-- Create Database -->
+                <section class="mdl-layout__tab-panel" id="scroll-tab-3">
+                    <div class="page-content">
+
+                        <main class="mdl-layout__content mat-typography">
+
+                            <div class="input-section mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                                 id="_createDatabase">
+                                <input class="mdl-textfield__input" type="text" id="createdatabase">
+                                <label class="mdl-textfield__label" for="createdatabase-btn" name="topic"
+                                       id="createdatabase-lbl">Create Database</label>
+                            </div>
+                            <div>
+                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
+                                        type="submit" id="createdatabase-btn">Create Database
+                                </button>
+                            </div>
+                        </main>
+                    </div>
+                </section>
+
+                <div id="confirmation-toast" aria-live="assertive" aria-atomic="true" aria-relevant="text"
+                     class="mdl-snackbar mdl-js-snackbar">
+                    <div class="mdl-snackbar__text"></div>
+                    <button type="button" class="mdl-snackbar__action"></button>
                 </div>
-            </div>
-
-            <div class="mdl-card">
-                <div class="mdl-cell mdl-cell--2-col">
-                    <main class="mdl-layout__content mat-typography">
-
-                        <div class="input-section mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
-                             id="unsubscribe_to_topic">
-                            <input class="mdl-textfield__input" type="text" id="untopic">
-                            <label class="mdl-textfield__label" for="untopic" name="topic" id="untopic-lbl">UN-Subscribe
-                                from Topic</label>
-                        </div>
-                        <div>
-                            <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
-                                    type="submit" id="unsubscribe-btn">UN-Subscribe
-                            </button>
-                        </div>
-                    </main>
-                    <main class="mdl-layout__content mat-typography">
-
-                        <div class="input-section mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
-                             id="_createDatabase">
-                            <input class="mdl-textfield__input" type="text" id="createdatabase">
-                            <label class="mdl-textfield__label" for="createdatabase-btn" name="topic"
-                                   id="createdatabase-lbl">Create Database</label>
-                        </div>
-                        <div>
-                            <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
-                                    type="submit" id="createdatabase-btn">Create Database
-                            </button>
-                        </div>
-                    </main>
                 </div>
-            </div>
-        </div>
-        <div id="confirmation-toast" aria-live="assertive" aria-atomic="true" aria-relevant="text"
-             class="mdl-snackbar mdl-js-snackbar">
-            <div class="mdl-snackbar__text"></div>
-            <button type="button" class="mdl-snackbar__action"></button>
-        </div>
-
+        </main>
     </div>
 </div>
 <script defer src="/static/js/material.min.js"></script>
