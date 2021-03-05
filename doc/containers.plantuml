@@ -1,0 +1,49 @@
+
+@startuml "IoThub_containers"
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+' uncomment the following line and comment the first to use locally
+' !include C4_Container.puml
+
+LAYOUT_TOP_DOWN()
+'LAYOUT_AS_SKETCH()
+LAYOUT_WITH_LEGEND()
+
+
+Person_Ext(anonymous_user, "Anonymous User")
+Person(aggregated_user, "Aggregated User")
+Person(administration_user, "Administration User")
+
+System_Boundary(c1, "IoThub"){
+
+    Container(web_app, "Web Application", "Docker React Material UI Dashboard", "Allows the User to see the Events and State, subscribe to Events, see connected Devices")
+
+    ContainerDb(nosql, "NoSQL Data Store", "Docker MongoDB 2.2.x", "Stores the User Data, Device Data (Events, State, last usage...)")
+
+    Container(emqx,"EMQX Mqtt Broker", "Docker EMQX MQTT Broker", "handles publish/subscribe mqtt messages, provides rest interface for message control")
+
+    ContainerDb(influxdb, "InfluxDB Time Series Data", "Docker Influxdb", "Stores Sensor and time series data for further analytics")
+
+    Container(Grafana, "Grafana Data visulization", "Docker Grafana Service", "Visualizes stored sensor and timer series data from influxdb")
+
+    Container(mqtt_influxbd_bridge,"Mqtt InfluxDB Bridge","Docker Mqtt InfluxDB Bridge Service","Middleware for storing sensor values in Influxdb")
+
+    Container(nodejs_backend, "nodejs Backend", "Docker Nodejs Backend", "provides Rest API for User and Device Management")
+}
+
+System(Irrigationbox, "Irrigationbox")
+
+
+Rel(anonymous_user, web_app, "Able to see the System State", "HTTPS")
+Rel(aggregated_user, web_app, "Able to see System State, see events and states, perfrom device specific actions", "HTTPS")
+Rel(administration_user, web_app, "Able to add and modify Users and Devices", "HTTPS")
+
+Rel(web_app, nodejs_backend, "Websocket & Rest API", "Rest Api for Users, promise Websocket for data")
+Rel(web_app, mqtt_influxbd_bridge, "Rest API", "Rest Api, start stop listening")
+
+Rel_U(nodejs_backend, nosql, "Reads from and writes to", "MongoDB Mongoose lib, port 27017")
+
+Rel(Irrigationbox, emqx, "mqtt[tls1.2]", "publish/subscribe messages")
+Rel(emqx, mqtt_influxbd_bridge, "mqtt", "publish/subscribe messages")
+Rel(mqtt_influxbd_bridge, influxdb, "rest api", "stores received Data")
+Rel(Grafana, influxdb, "rest api", "Gather data for visulization")
+@enduml
